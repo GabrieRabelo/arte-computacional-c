@@ -126,14 +126,13 @@ int main(int argc, char** argv)
     Pixel (*in)[width] = (Pixel(*)[width]) pic[0].img;
     Pixel (*out)[width] = (Pixel(*)[width]) pic[1].img;
 
-	// Aplica o algoritmo e gera a saida em out (pic[1].img)
-	// ...
-	// ...
-    // Exemplo: copia apenas o componente vermelho para a saida
+    //Início do codigo de transformacao da imagem de saida
+
     //    printf("%d %d \n", width, height);
 
-    int length = 100000;
+    int length = 3000;
     Seed seeds[length];
+
     srand(time(NULL));
 
     for(int i=0; i<length;i++){
@@ -160,9 +159,11 @@ int main(int argc, char** argv)
             out[y][x].r = seed.pixel.r;
             out[y][x].g = seed.pixel.g;
             out[y][x].b = seed.pixel.b;
-
         }
     }
+
+    //Fim da mudanca do código de transformacao da imagem de saida
+
 
 	// Cria texturas em memória a partir dos pixels das imagens
     tex[0] = SOIL_create_OGL_texture((unsigned char*) pic[0].img, width, height, SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, 0);
@@ -172,6 +173,7 @@ int main(int argc, char** argv)
     glutMainLoop();
 }
 
+//Calcula a semente mais próxima
 Seed nearestSeed(int x, int y, Seed* seeds, int length) {
     Seed seed;
     int closestDistance = INT_MAX;
@@ -188,6 +190,7 @@ Seed nearestSeed(int x, int y, Seed* seeds, int length) {
     return seed;
 }
 
+//Calcula a distancia euclidiana
 int distance(int x, int y, int xs, int ys){
     return sqrt(pow((x - xs),2) + pow((y - ys),2));
 }
