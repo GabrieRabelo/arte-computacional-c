@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>		// Para usar strings
+#include <time.h>
+#include <limits.h>
 
 #ifdef WIN32
 #include <windows.h>    // Apenas para Windows
@@ -32,9 +34,17 @@ typedef struct {
     Pixel* img;
 } Img;
 
+typedef struct {
+    int x, y;
+    Pixel pixel;
+} Seed;
+
 // Protótipos
 void load(char* name, Img* pic);
 void valida();
+Seed nearestSeed(int x, int y, Seed* seeds, int length);
+int distance(int x, int y, int xs, int ys);
+
 
 // Funções da interface gráfica e OpenGL
 void init();
@@ -120,12 +130,39 @@ int main(int argc, char** argv)
 	// ...
 	// ...
     // Exemplo: copia apenas o componente vermelho para a saida
-    printf("%d %d \n", width, height);
-    for(int y=0; y<height; y=y+rand() % 29 + 1)
-        for(int x=0; x<width; x=x+rand() % 29 + 1){
-            printf("%.2f %.2f %d %d %d\n", ((double)x/width), ((double)y/height), in[y][x].r, in[y][x].g, in[y][x].b);
-            out[y][x].b = in[y][x].b;
+//    printf("%d %d \n", width, height);
+
+    int length = 200;
+    Seed seeds[length];
+    srand(time(NULL));
+
+    for(int i=0; i<length;i++){
+        int randomX = rand() % width;
+        int randomY = rand() % height;
+
+        seeds[i].x = randomX;
+        seeds[i].y = randomY;
+
+        Pixel pixel = {
+            in[randomX][randomY].r,
+            in[randomX][randomY].g,
+            in[randomX][randomY].b
+            };
+
+        seeds[i].pixel = pixel;
+
+//        printf("%d - %d | %d, %d, %d\n", seeds[i].x, seeds[i].y, seeds[i].pixel.r, seeds[i].pixel.g, seeds[i].pixel.b);
+    }
+
+    for(int y=0; y<height; y++) {
+        for(int x=0; x<width; x++){
+            Seed seed = nearestSeed(x, y, seeds, length);
+            out[y][x].r = seed.pixel.r;
+            out[y][x].g = seed.pixel.g;
+            out[y][x].b = seed.pixel.b;
+
         }
+    }
 
 	// Cria texturas em memória a partir dos pixels das imagens
     tex[0] = SOIL_create_OGL_texture((unsigned char*) pic[0].img, width, height, SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, 0);
@@ -133,6 +170,26 @@ int main(int argc, char** argv)
 
 	// Entra no loop de eventos, não retorna
     glutMainLoop();
+}
+
+Seed nearestSeed(int x, int y, Seed* seeds, int length) {
+    Seed seed;
+    int closestDistance = INT_MAX;
+
+    for(int i=0; i< length;i++){
+        int currentDistance = distance(seeds[i].x, seeds[i].y, x, y);
+
+        if(currentDistance < closestDistance ) {
+            seed = seeds[i];
+            closestDistance = currentDistance;
+        }
+    }
+
+    return seed;
+}
+
+int distance(int x, int y, int xs, int ys){
+    return sqrt(pow((x - xs),2) + pow((y - ys),2));
 }
 
 // Gerencia eventos de teclado

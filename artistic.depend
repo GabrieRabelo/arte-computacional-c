@@ -141,11 +141,13 @@
 
 1588961710 /home/rabelo/Desktop/PUCRS/PSB/artistic/lib/SOIL/stbi_DDS_aug_c.h
 
-1589133320 source:/home/rabelo/Desktop/PUCRS/PSB/artistic/main.c
+1589660875 source:/home/rabelo/Desktop/PUCRS/PSB/artistic/main.c
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
 	<string.h>
+	<time.h>
+	<limits.h>
 	<windows.h>
 	<OpenGL/gl.h>
 	<OpenGL/glu.h>
