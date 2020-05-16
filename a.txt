@@ -241,3 +241,4 @@ void draw()
     // Exibe a imagem
     glutSwapBuffers();
 }
+
