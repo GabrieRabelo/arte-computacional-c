@@ -130,7 +130,7 @@ int main(int argc, char** argv)
 
     //    printf("%d %d \n", width, height);
 
-    int length = 3000;
+    int length = 1000;
     Seed seeds[length];
 
     srand(time(NULL));
@@ -142,11 +142,45 @@ int main(int argc, char** argv)
         seeds[i].x = randomX;
         seeds[i].y = randomY;
 
-        Pixel pixel = {
-            in[randomY][randomX].r,
-            in[randomY][randomX].g,
-            in[randomY][randomX].b
-            };
+        int radius = 5;
+
+        int x[] = {randomX + radius, randomX, randomX - radius};
+        int y[] = {randomY + radius, randomY, randomY - radius};
+
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+
+        for (int i = 0; i < 3; i ++) {
+            for (int j = 0; j < 3; j ++) {
+                if (x[i] > 0 && x[i] < width && y[j] > 0 && y[j] < height) {
+                    red += in[y[j]][x[i]].r;
+                    green += in[y[j]][x[i]].g;
+                    blue += in[y[j]][x[i]].b;
+                }
+            }
+        }
+
+        int avgRed = red/9;
+        int avgGreen = green/9;
+        int avgBlue = blue/9;
+        //x1,y1 x1,y2 x2,y1 x2,y2
+
+
+
+
+        Pixel pixel =
+        {
+            avgRed,
+            avgGreen,
+            avgBlue
+        };
+//        {
+//            in[randomY][randomX].r,
+//            in[randomY][randomX].g,
+//            in[randomY][randomX].b
+//        };
+
 
         seeds[i].pixel = pixel;
 
